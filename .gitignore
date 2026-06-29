@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dataset
+database/data/raw/
+database/data/processed/
+database/data/final/
+
+# Model files
+*.pkl
+*.joblib
+
+# Environment
+.env
+venv/
