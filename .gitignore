@@ -17,3 +17,6 @@ database/data/final/
 # Environment
 .env
 venv/
+
+# macos
+.DS_Store
