@@ -15,7 +15,10 @@ def predict_aqi(data: dict):
     # Encode categorical columns
     for column, encoder in LABEL_ENCODERS.items():
       if column in df.columns:
+        if isinstance(df[column].iloc[0], str):
+          df[column] = df[column].astype(str).str.lower()
         df[column] = encoder.transform(df[column])
+
 
     # Keep features in the exact order used during training
     df = df[FEATURES]
