@@ -1,0 +1,29 @@
+.navbar{
+
+    background:#0f172a;
+
+    color:white;
+
+    height:70px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 40px;
+
+}
+
+.navbar h2{
+
+    margin:0;
+
+}
+
+.navbar span{
+
+    color:#ddd;
+
+}

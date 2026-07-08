@@ -3,8 +3,8 @@ from pydantic import BaseModel, field_validator
 
 
 class AQIPredictionRequest(BaseModel):
-    city: Literal['agartala', 'ahmedabad', 'aizawl', 'bengaluru', 'bhopal', 'bhubaneswar', 'chandigarh', 'chennai', 'dehradun', 'delhi']
-    state: Literal['delhi', 'gujarat', 'karnataka', 'madhya pradesh', 'mizoram', 'odisha', 'punjab', 'tamil nadu', 'tripura', 'uttarakhand']
+    city: str
+    state: str
     latitude: float
     longitude: float
     month: int
@@ -49,3 +49,17 @@ class AQIPredictionRequest(BaseModel):
         if isinstance(v, str):
             return v.lower()
         return v
+    
+from datetime import datetime
+
+
+class PredictionHistoryResponse(BaseModel):
+    id: int
+    city: str
+    state: str
+    predicted_aqi: float
+    prediction_time: datetime
+
+    model_config = {
+        "from_attributes": True
+    }

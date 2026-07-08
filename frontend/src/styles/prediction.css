@@ -1,0 +1,151 @@
+.prediction-form{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.prediction-form h2{
+
+    margin-bottom:20px;
+
+}
+
+.prediction-form label{
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+
+}
+
+.prediction-form input,
+
+.prediction-form select{
+
+    padding:12px;
+
+    border-radius:10px;
+
+    border:1px solid #d1d5db;
+
+    margin-bottom:20px;
+
+    font-size:15px;
+
+}
+
+.prediction-form button{
+
+    padding:15px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+
+.prediction-form button:hover{
+
+    background:#1d4ed8;
+
+}
+
+.prediction-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.aqi-value{
+
+    font-size:70px;
+
+    font-weight:bold;
+
+    color:#2563eb;
+
+}
+
+.badge{
+
+    margin-top:20px;
+
+    padding:10px 25px;
+
+    color:white;
+
+    border-radius:30px;
+
+    font-weight:bold;
+
+}
+
+.good{
+
+    background:#22c55e;
+
+}
+
+.moderate{
+
+    background:#eab308;
+
+}
+
+.polluted{
+
+    background:#f97316;
+
+}
+
+.advice{
+
+    margin-top:20px;
+
+    text-align:center;
+
+}
+.prediction-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.aqi-value {
+    font-size: 72px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.badge {
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.advice {
+    text-align: center;
+    color: #555;
+    line-height: 1.6;
+    font-size: 15px;
+}

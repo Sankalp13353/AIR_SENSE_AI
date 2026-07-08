@@ -1,18 +1,46 @@
-from fastapi import APIRouter, HTTPException
+from typing import List
 
-from app.schemas.prediction import AQIPredictionRequest
-from app.services.prediction_service import predict
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
-router = APIRouter(prefix="/prediction", tags=["Prediction"])
+from app.db.dependencies import get_db
+from app.schemas.prediction import (
+    AQIPredictionRequest,
+    PredictionHistoryResponse,
+)
+from app.services.history_service import get_prediction_history
+from app.services.prediction_service import make_prediction
+from app.services.stats_service import get_prediction_stats
+
+router = APIRouter(
+    prefix="/prediction",
+    tags=["Prediction"]
+)
+
 
 @router.post("/")
-def predict_route(request: AQIPredictionRequest):
-    try:
-        prediction = predict(request.model_dump())
-        return {
-            "predicted_aqi": prediction
-        }
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+def predict_route(
+    request: AQIPredictionRequest,
+    db: Session = Depends(get_db)
+):
+    return make_prediction(
+        request.model_dump(),
+        db
+    )
+
+
+@router.get(
+    "/history",
+    response_model=List[PredictionHistoryResponse]
+)
+def prediction_history(
+    db: Session = Depends(get_db)
+):
+    return get_prediction_history(db)
+
+
+@router.get("/stats")
+def prediction_stats(
+    db: Session = Depends(get_db)
+):
+    return get_prediction_stats(db)

@@ -10,7 +10,32 @@ LABEL_ENCODERS = joblib.load(BASE_DIR / "label_encoders.pkl")
 
 
 def predict_aqi(data: dict):
-    df = pd.DataFrame([data])
+    # Map unknown cities/states to known equivalents for ML model encoding
+    model_data = data.copy()
+    city_lower = str(model_data.get("city", "")).lower()
+    state_lower = str(model_data.get("state", "")).lower()
+
+    known_cities = {'agartala', 'ahmedabad', 'aizawl', 'bengaluru', 'bhopal', 'bhubaneswar', 'chandigarh', 'chennai', 'dehradun', 'delhi'}
+    known_states = {'delhi', 'gujarat', 'karnataka', 'madhya pradesh', 'mizoram', 'odisha', 'punjab', 'tamil nadu', 'tripura', 'uttarakhand'}
+
+    if city_lower not in known_cities or state_lower not in known_states:
+        fallback_map = {
+            "goa": ("bengaluru", "karnataka"),
+            "hyderabad": ("bhopal", "madhya pradesh"),
+            "jaipur": ("ahmedabad", "gujarat"),
+            "kolkata": ("delhi", "delhi"),
+            "lucknow": ("delhi", "delhi"),
+            "mumbai": ("bhopal", "madhya pradesh"),
+            "pune": ("bengaluru", "karnataka"),
+            "shimla": ("dehradun", "uttarakhand"),
+            "visakhapatnam": ("chennai", "tamil nadu"),
+            "vishakapatnam": ("chennai", "tamil nadu"),
+        }
+        mapped_city, mapped_state = fallback_map.get(city_lower, ("delhi", "delhi"))
+        model_data["city"] = mapped_city
+        model_data["state"] = mapped_state
+
+    df = pd.DataFrame([model_data])
 
     # Encode categorical columns
     for column, encoder in LABEL_ENCODERS.items():
