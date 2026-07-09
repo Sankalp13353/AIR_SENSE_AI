@@ -6,6 +6,7 @@ import PredictionCard from "../components/PredictionCard";
 import StatsCards from "../components/StatsCards";
 import HistoryTable from "../components/HistoryTable";
 import AQIMap from "../components/AQIMap";
+import AdvisoryBot from "../components/AdvisoryBot";
 
 import {
   getPredictionHistory,
@@ -40,10 +41,14 @@ function Dashboard() {
   }, []);
 
   return (
-    <>
+    <div className="app-container">
+      {/* Top Header/Navigation bar */}
       <Navbar />
 
-      <div className="container">
+      {/* Main Dashboard Layout */}
+      <main className="dashboard-content">
+        
+        {/* Row 1: Predict AQI Form & Result Card */}
         <div className="top-section">
           <PredictionForm
             setPrediction={setPrediction}
@@ -54,16 +59,22 @@ function Dashboard() {
           <PredictionCard prediction={prediction} />
         </div>
 
+        {/* Row 2: Stats Cards Grid */}
         <StatsCards stats={stats} />
 
-        <HistoryTable history={history} />
+        {/* Row 3: Bottom Cards Grid */}
+        <div className="bottom-grid">
+          <AQIMap
+            prediction={prediction}
+            selectedCity={selectedCity}
+          />
+          
+          <HistoryTable history={history} />
 
-        <AQIMap
-          prediction={prediction}
-          selectedCity={selectedCity}
-        />
-      </div>
-    </>
+          <AdvisoryBot prediction={prediction} />
+        </div>
+      </main>
+    </div>
   );
 }
 
