@@ -252,7 +252,7 @@
 /* Bottom Grid for Map, Table, Bot */
 .bottom-grid {
     display: grid;
-    grid-template-columns: 1.1fr 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
     gap: 24px;
     align-items: stretch;
 }
@@ -261,4 +261,33 @@
     .bottom-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Delete Button Styles */
+.delete-btn {
+    background: transparent;
+    border: none;
+    padding: 6px;
+    color: var(--text-light);
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.delete-btn:hover {
+    color: #ef4444;
+    background-color: #fef2f2;
+    transform: scale(1.1);
+}
+
+.delete-btn:active {
+    transform: scale(0.95);
+}
+
+.delete-btn svg {
+    width: 16px;
+    height: 16px;
 }

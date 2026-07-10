@@ -237,3 +237,215 @@
     margin-left: -1px;
     margin-top: 1px;
 }
+.message-bubble {
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+.chat-send-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.status-text {
+    font-weight: 600;
+}
+
+/* Floating Bot Card Popup */
+.bot-popup-card {
+    position: fixed !important;
+    bottom: 105px !important;
+    right: 30px !important;
+    width: 380px !important;
+    height: 480px !important;
+    max-height: calc(100vh - 150px) !important;
+    z-index: 9998 !important;
+    box-shadow: var(--shadow-premium) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border: 1px solid var(--border-color-dark) !important;
+    background: white !important;
+    animation: slideInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bot-popup-card .chat-messages {
+    max-height: none !important;
+    height: 100% !important;
+}
+
+/* Floating Bot Toggle Button */
+.bot-toggle-btn {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    background: var(--primary-gradient) !important;
+    border: none !important;
+    color: white !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3) !important;
+    z-index: 9999 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.bot-toggle-btn:hover {
+    transform: scale(1.1) translateY(-2px) !important;
+    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.4) !important;
+}
+
+.bot-toggle-btn:active {
+    transform: scale(0.95) !important;
+}
+
+.bot-toggle-btn.active {
+    background: #f1f5f9 !important;
+    color: var(--text-muted) !important;
+    box-shadow: var(--shadow-md) !important;
+    border: 1px solid var(--border-color-dark) !important;
+}
+
+.bot-toggle-btn.active:hover {
+    background: #e2e8f0 !important;
+    color: var(--text-main) !important;
+}
+
+.bot-toggle-btn svg {
+    width: 26px !important;
+    height: 26px !important;
+}
+
+/* Pulse Notification Dot */
+.bot-notification-dot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: #ef4444;
+    border: 2px solid white;
+    border-radius: 50%;
+    animation: pulseBadge 2s infinite;
+}
+
+@keyframes pulseBadge {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Onboarding Tooltip balloon */
+.bot-onboarding-tooltip {
+    position: fixed;
+    bottom: 30px;
+    right: 105px;
+    width: 290px;
+    background: white;
+    border: 1px solid var(--border-color-dark);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: var(--shadow-lg);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: slideInLeft 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bot-onboarding-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: 20px;
+    right: -8px;
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-top: 1px solid var(--border-color-dark);
+    border-right: 1px solid var(--border-color-dark);
+    transform: rotate(45deg);
+}
+
+.close-tooltip-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-light);
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px;
+}
+
+.close-tooltip-btn:hover {
+    color: var(--text-main);
+}
+
+.tooltip-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.tooltip-text {
+    font-size: 0.76rem;
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+
+.tooltip-sample-questions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.tooltip-sample-questions button {
+    background: var(--primary-light);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    color: var(--primary);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tooltip-sample-questions button:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateX(2px);
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

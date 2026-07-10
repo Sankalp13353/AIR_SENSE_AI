@@ -26,6 +26,7 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
+    justify-content: space-between;
 }
 
 .form-title-icon, .card-title-icon {
@@ -48,7 +49,40 @@
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-main);
-    letter-spacing: -0.01em;
+}
+
+.delete-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.delete-btn:hover:not(:disabled) {
+    background: #fecaca;
+    color: #991b1b;
+    transform: scale(1.05);
+}
+
+.delete-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.delete-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.delete-btn svg {
+    width: 18px;
+    height: 18px;
 }
 
 /* Grid Layout */

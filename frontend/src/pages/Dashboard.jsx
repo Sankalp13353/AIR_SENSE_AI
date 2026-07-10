@@ -69,11 +69,12 @@ function Dashboard() {
             selectedCity={selectedCity}
           />
           
-          <HistoryTable history={history} />
-
-          <AdvisoryBot prediction={prediction} />
+          <HistoryTable history={history} refreshDashboard={loadDashboard} />
         </div>
       </main>
+
+      {/* Floating AI Assistant Chatbot */}
+      <AdvisoryBot prediction={prediction} />
     </div>
   );
 }

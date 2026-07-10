@@ -23,6 +23,8 @@ def make_prediction(data: dict, db):
 
     # Return complete response
     return {
-        "predicted_aqi": prediction,
-        **category_info
-    }
+    "city": data["city"],
+    "state": data["state"],
+    "predicted_aqi": prediction,
+    **category_info
+}

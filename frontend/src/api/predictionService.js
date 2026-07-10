@@ -14,3 +14,13 @@ export const getPredictionStats = async () => {
   const response = await api.get("/prediction/stats");
   return response.data;
 };
+
+export const deletePrediction = async (predictionId) => {
+  const response = await api.delete(`/prediction/${predictionId}`);
+  return response.data;
+};
+
+export const chatWithAI = async (data) => {
+  const response = await api.post("/chat/", data);
+  return response.data;
+};

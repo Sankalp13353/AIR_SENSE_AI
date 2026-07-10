@@ -1,11 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
-  CircleMarker,
+  Marker,
   Popup,
   useMap
 } from "react-leaflet";
+import L from "leaflet";
 import cities from "../assets/cities.json";
 import { profiles } from "../assets/cityFeatures";
 import "../styles/map.css";
@@ -22,6 +23,9 @@ function MapController({ center, zoom }) {
 }
 
 function AQIMap({ prediction, selectedCity }) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [mapTheme, setMapTheme] = useState("light");
+
   // Center map on selected city, or default to center of India
   const mapCenter = selectedCity
     ? [selectedCity.latitude, selectedCity.longitude]
@@ -49,56 +53,53 @@ function AQIMap({ prediction, selectedCity }) {
     return { color: "#7f1d1d", category: "Hazardous" };
   };
 
-  return (
-    <div id="map-section" className="card map-card">
-      <div className="map-header">
-        <div className="map-title-group">
-          <div className="card-title-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="title-icon-svg">
-              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-            </svg>
-          </div>
-          <h2>AQI Map (India)</h2>
+  // Generate glowing pulsing Leaflet divIcon markers
+  const createAQIIcon = (color, isSelected, category) => {
+    return L.divIcon({
+      className: `custom-aqi-marker-container ${isSelected ? "selected" : ""}`,
+      html: `
+        <div class="aqi-pulse-dot" style="background-color: ${color};">
+          <span class="aqi-pulse-ring" style="color: ${color};"></span>
         </div>
-        <button className="info-btn" title="Showing real-time AQI predictions across India">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-          </svg>
-        </button>
-      </div>
+      `,
+      iconSize: isSelected ? [32, 32] : [24, 24],
+      iconAnchor: isSelected ? [16, 16] : [12, 12]
+    });
+  };
 
+  const renderMap = (isLarge = false) => {
+    const tileUrl =
+      mapTheme === "light"
+        ? "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+
+    return (
       <div className="map-container-wrapper">
         <MapContainer
+          key={`${mapTheme}-${isLarge}`} // Ensure fresh Leaflet instance on theme/layout changes
           center={mapCenter}
-          zoom={mapZoom}
+          zoom={isLarge ? mapZoom + 1 : mapZoom}
           style={{ height: "100%", width: "100%" }}
           zoomControl={true}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" // Modern, light map style
+            url={tileUrl}
           />
           
-          <MapController center={mapCenter} zoom={mapZoom} />
+          <MapController center={mapCenter} zoom={isLarge ? mapZoom + 1 : mapZoom} />
 
           {cities.map((city) => {
             const isSelected = selectedCity && selectedCity.city === city.city;
             const aqi = getAQIValue(city, isSelected);
             const { color, category } = getAQIMeta(aqi);
+            const customIcon = createAQIIcon(color, isSelected, category);
 
             return (
-              <CircleMarker
+              <Marker
                 key={city.city}
-                center={[city.latitude, city.longitude]}
-                radius={isSelected ? 14 : 9}
-                pathOptions={{
-                  fillColor: color,
-                  fillOpacity: 0.85,
-                  color: isSelected ? "#0f172a" : "#ffffff",
-                  weight: isSelected ? 3 : 1.5
-                }}
+                position={[city.latitude, city.longitude]}
+                icon={customIcon}
               >
                 <Popup className="map-popup">
                   <div className="popup-content">
@@ -114,7 +115,7 @@ function AQIMap({ prediction, selectedCity }) {
                     </div>
                   </div>
                 </Popup>
-              </CircleMarker>
+              </Marker>
             );
           })}
         </MapContainer>
@@ -127,7 +128,89 @@ function AQIMap({ prediction, selectedCity }) {
           <div className="legend-item"><span className="dot unhealthy"></span> 151+ Unhealth</div>
         </div>
       </div>
-    </div>
+    );
+  };
+
+  return (
+    <>
+      <div id="map-section" className="card map-card">
+        <div className="map-header">
+          <div className="map-title-group">
+            <div className="card-title-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="title-icon-svg">
+                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+              </svg>
+            </div>
+            <h2>AQI Map (India)</h2>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <button
+              className="info-btn"
+              onClick={() => setMapTheme(mapTheme === "light" ? "dark" : "light")}
+              title={`Switch to ${mapTheme === "light" ? "Dark Map" : "Light Map"}`}
+            >
+              {mapTheme === "light" ? (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              )}
+            </button>
+            <button className="info-btn" onClick={() => setIsFullscreen(true)} title="Expand Map">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+              </svg>
+            </button>
+            <button className="info-btn" title="Showing real-time AQI predictions across India">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {renderMap(false)}
+      </div>
+
+      {isFullscreen && (
+        <div className="map-fullscreen-modal">
+          <div className="map-fullscreen-content">
+            <div className="map-fullscreen-header">
+              <div className="map-title-group">
+                <div className="card-title-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="title-icon-svg">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                  </svg>
+                </div>
+                <h2>AQI Map (India) - Fullscreen</h2>
+              </div>
+              <button className="close-fullscreen-btn" onClick={() => setIsFullscreen(false)} title="Close Fullscreen">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "20px", height: "20px" }}>
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div className="map-fullscreen-container">
+              {renderMap(true)}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
