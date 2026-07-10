@@ -55,3 +55,5 @@ LLM
 Deployment
 - Vercel
 - Render
+
+uvicorn app.main:app --reload
