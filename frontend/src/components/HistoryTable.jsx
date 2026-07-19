@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../styles/dashboard.css";
 import { deletePrediction } from "../api/predictionService";
 
-function HistoryTable({ history, refreshDashboard }) {
+function HistoryTable({ history, refreshDashboard, prediction, setPrediction }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Map AQI to category status class and text
@@ -42,11 +42,16 @@ function HistoryTable({ history, refreshDashboard }) {
     if (window.confirm(`Are you sure you want to delete the prediction for ${city}?`)) {
       try {
         await deletePrediction(id);
+        alert(`Prediction for ${city} deleted successfully`);
+        if (prediction && prediction.id === id && setPrediction) {
+          setPrediction(null);
+        }
         if (refreshDashboard) {
           refreshDashboard();
         }
       } catch (err) {
         console.error("Error deleting prediction:", err);
+        alert(`Failed to delete prediction: ${err.message}`);
       }
     }
   };

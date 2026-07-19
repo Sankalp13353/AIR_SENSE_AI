@@ -56,7 +56,11 @@ function Dashboard() {
             setSelectedCity={setSelectedCity}
           />
 
-          <PredictionCard prediction={prediction} />
+          <PredictionCard
+            prediction={prediction}
+            setPrediction={setPrediction}
+            refreshDashboard={loadDashboard}
+          />
         </div>
 
         {/* Row 2: Stats Cards Grid */}
@@ -69,7 +73,12 @@ function Dashboard() {
             selectedCity={selectedCity}
           />
           
-          <HistoryTable history={history} refreshDashboard={loadDashboard} />
+          <HistoryTable
+            history={history}
+            refreshDashboard={loadDashboard}
+            prediction={prediction}
+            setPrediction={setPrediction}
+          />
         </div>
       </main>
 

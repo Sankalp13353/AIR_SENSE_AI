@@ -23,8 +23,9 @@ def make_prediction(data: dict, db):
 
     # Return complete response
     return {
-    "city": data["city"],
-    "state": data["state"],
-    "predicted_aqi": prediction,
-    **category_info
-}
+        "id": history.id,
+        "city": data["city"],
+        "state": data["state"],
+        "predicted_aqi": prediction,
+        **category_info
+    }
